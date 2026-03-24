@@ -12,12 +12,12 @@ class Ticket implements Comparable<Ticket> { //representa um chamado
         this.descricao = descricao;
     }
 
-    
+    @Override
     public String toString() {
         return "ID: " + id + " | Assunto: " + descricao;// define como o ticket aparece na tela
     }
 
-    
+    @Override
     public int compareTo(Ticket outro) { 
         return Integer.compare(this.id, outro.id); //permite ordenar os tickets pelo ID
     }
