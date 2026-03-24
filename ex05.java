@@ -3,7 +3,7 @@ package ChamadosTI;
 import javax.swing.JOptionPane;
 import java.util.*;
 
-class Ticket implements Comparable<Ticket> {
+class Ticket implements Comparable<Ticket> { //representa um chamado
     int id;
     String descricao;
 
@@ -14,21 +14,21 @@ class Ticket implements Comparable<Ticket> {
 
     
     public String toString() {
-        return "ID: " + id + " | Assunto: " + descricao;
+        return "ID: " + id + " | Assunto: " + descricao;// define como o ticket aparece na tela
     }
 
     
-    public int compareTo(Ticket outro) {
-        return Integer.compare(this.id, outro.id);
+    public int compareTo(Ticket outro) { 
+        return Integer.compare(this.id, outro.id); //permite ordenar os tickets pelo ID
     }
 }
 
 public class Chamados {
   
-    private Queue<Ticket> filaAbertos = new LinkedList<>(); 
-    private List<Ticket> listaResolvidos = new ArrayList<>(); 
-    private Stack<Ticket> pilhaReabertura = new Stack<>(); 
-    private TreeSet<Integer> arvoreIDs = new TreeSet<>(); 
+    private Queue<Ticket> filaAbertos = new LinkedList<>(); //fila - ordem do atendimento
+    private List<Ticket> listaResolvidos = new ArrayList<>(); // lista - guarda chamados resolvidos
+    private Stack<Ticket> pilhaReabertura = new Stack<>(); //pilha - reabre chamado mais recente
+    private TreeSet<Integer> arvoreIDs = new TreeSet<>(); //arvore - guarda ids unicos, busca rapido
 
     public static void main(String[] args) {
         Chamados app = new Chamados();
@@ -36,7 +36,7 @@ public class Chamados {
     }
 
     public void menuPrincipal() {
-        String menu = "--- CENTRAL DE SUPORTE TÉCNICO ---\n" +
+        String menu = "--- SUPORTE TÉCNICO ---\n" +
                       "1. Abrir Ticket\n" +
                       "2. Atender Ticket\n" +
                       "3. Reabrir Último Ticket\n" +
@@ -63,16 +63,16 @@ public class Chamados {
    
     private void abrirChamado() {
         try {
-            int id = Integer.parseInt(JOptionPane.showInputDialog("Digite o ID do Ticket:"));
-            if (arvoreIDs.contains(id)) {
+            int id = Integer.parseInt(JOptionPane.showInputDialog("Digite o ID do Ticket:")); //abrir chamado
+            if (arvoreIDs.contains(id)) { //impede ids duplicados
                 JOptionPane.showMessageDialog(null, "Erro: Este ID já existe!");
                 return;
             }
             String desc = JOptionPane.showInputDialog("Descrição do problema:");
             Ticket novo = new Ticket(id, desc);
             
-            filaAbertos.add(novo); 
-            arvoreIDs.add(id);    
+            filaAbertos.add(novo); //vai p fila
+            arvoreIDs.add(id); // id vai p arvore
             JOptionPane.showMessageDialog(null, "Ticket criado com sucesso!");
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "ID deve ser um número inteiro.");
@@ -85,7 +85,7 @@ public class Chamados {
             JOptionPane.showMessageDialog(null, "Não há tickets na fila.");
             return;
         }
-        Ticket atendido = filaAbertos.poll();
+        Ticket atendido = filaAbertos.poll(); //remove o primeiro da fila
         listaResolvidos.add(atendido); 
         pilhaReabertura.push(atendido); 
         JOptionPane.showMessageDialog(null, "Atendendo: " + atendido);
@@ -97,7 +97,7 @@ public class Chamados {
             JOptionPane.showMessageDialog(null, "Nenhum ticket resolvido para reabrir.");
             return;
         }
-        Ticket reaberto = pilhaReabertura.pop();
+        Ticket reaberto = pilhaReabertura.pop(); // pega o ultimo resolvido
         listaResolvidos.remove(reaberto);
         filaAbertos.add(reaberto);
         JOptionPane.showMessageDialog(null, "Ticket " + reaberto.id + " reaberto e movido para a fila.");
@@ -110,7 +110,7 @@ public class Chamados {
             return;
         }
         StringBuilder sb = new StringBuilder("--- Tickets Resolvidos ---\n");
-        for (Ticket t : listaResolvidos) sb.append(t).append("\n");
+        for (Ticket t : listaResolvidos) sb.append(t).append("\n"); // percorre lista e exibe
         JOptionPane.showMessageDialog(null, sb.toString());
     }
 
@@ -118,7 +118,7 @@ public class Chamados {
     private void buscarTicket() {
         try {
             int id = Integer.parseInt(JOptionPane.showInputDialog("Digite o ID para busca:"));
-            if (arvoreIDs.contains(id)) {
+            if (arvoreIDs.contains(id)) { // busca rápida na árvore
                 JOptionPane.showMessageDialog(null, "O Ticket ID " + id + " está registrado no sistema.");
             } else {
                 JOptionPane.showMessageDialog(null, "Ticket ID " + id + " não encontrado.");
